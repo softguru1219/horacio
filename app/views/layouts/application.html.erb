@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= yield(:title) %></title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'vendor/bootstrap-select/bootstrap-select.min.css', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'vendor/flatpickr/flatpickr.min.css', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'vendor/custombox/custombox.min.css', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'vendor/theme.css', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'style.css', 'data-turbolinks-track': 'reload' %>
+
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'https://www.amcharts.com/lib/4/core.js', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'https://www.amcharts.com/lib/4/charts.js', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'https://www.amcharts.com/lib/4/themes/animated.js', 'data-turbolinks-track': 'reload' %>
+    <%= favicon_link_tag asset_path('favicon.ico') %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css"> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/i18n/defaults-*.min.js"></script> -->
+  </head>
+
+  <body data-lang="<%= I18n.locale %>" data-signed-in="<%= !current_user.nil? %>" data-controller="<%= controller_path %>" data-action="<%= action_name %>" data-rails-path="<%= controller_path %>#<%= action_name %>" data-env="<%= Rails.env %>">
+    <%= render partial: current_user ? 'header' : 'login_header' %>
+        <main id="content" role="main"><%= yield %></main>
+    <% if current_user %>
+        <%= render partial: 'footer' %>
+    <% end %>
+  </body>
+</html>

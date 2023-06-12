@@ -1,0 +1,21 @@
+<header id="header" class="u-header">
+  <div class="u-header__section">
+    <div id="logoAndNav" class="container">
+      <nav class="js-mega-menu navbar navbar-expand-md u-header__navbar u-header__navbar--no-space hs-menu-initialized hs-menu-horizontal">
+        <a class="navbar-brand u-header__navbar-brand u-header__navbar-brand-center" aria-label="Front">
+          <%= image_tag("horacio_web.png", :alt => "logo", :class=>"img-resolution") %>
+        </a>
+        <button type="button" class="navbar-toggler btn u-hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navBar" data-toggle="collapse" data-target="#navBar">
+          <span id="hamburgerTrigger" class="u-hamburger__box">
+            <span class="u-hamburger__inner"></span>
+          </span>
+        </button>
+        <div id="navBar" class="collapse navbar-collapse u-header__navbar-collapse">
+          <ul class="navbar-nav u-header__navbar-nav ml-auto">
+            <%= render partial: 'signed_in_header' %>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>

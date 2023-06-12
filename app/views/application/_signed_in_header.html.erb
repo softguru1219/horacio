@@ -1,0 +1,10 @@
+<li class="nav-item hs-has-mega-menu u-header__nav-item" data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut"  data-position="left">
+  <% if current_page?(edit_profile_path) %>
+    <a class="nav-link u-header__nav-link" href="<%= schedule_path %>">Tableau de Bord</a>
+  <% else %>
+    <a class="nav-link u-header__nav-link" href="<%= edit_profile_path %>">Gérer mon profil</a>
+  <% end %>
+</li>
+<li class="nav-item hs-has-mega-menu u-header__nav-item" data-event="hover" data-animation-in="slideInUp" data-animation-out="fadeOut"  data-position="left">
+  <%= link_to('Se déconnecter', destroy_user_session_path, method: :delete, class: "nav-link u-header__nav-link") %>
+</li>

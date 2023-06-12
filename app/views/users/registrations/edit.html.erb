@@ -1,0 +1,138 @@
+<%= content_for(:title, "Votre Profile - Horacio Web") %>
+<div class="bg-primary">
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-lg-7 order-lg-1">
+        <!-- User Info -->
+        <div class="media d-block d-sm-flex align-items-sm-center">
+          <div class="u-lg-avatar position-relative mb-sm-0 mr-3 image-align">
+            <% if current_user.avatar.attached? %>
+              <img class="img-fluid rounded-circle" src="<%=(url_for(current_user.avatar))%>" alt="Image Description">
+            <% else %>
+              <img class="img-fluid rounded-circle" src="https://ui-avatars.com/api/?background=ffffff&name=<%= current_user.first_name %> + <%= current_user.last_name %>" alt="Image Description">
+            <% end %>
+          </div>
+          <div class="media-body">
+            <h1 class="h3 text-white font-weight-medium mb-0">Bonjour, <%= current_user.first_name %>!</h1>
+          </div>
+        </div>
+        <!-- End User Info -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-light">
+  <div class="container space-2">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, :class => 'edit-js-validate w-md-75 w-lg-75 mx-md-auto'}) do |f| %>
+      <% if resource.errors.any? %>
+        <div class="alert-message">
+          <div class="alert alert-warning alert-dismissible fade show">
+            <ul>
+              <strong>Attention!</strong>
+              <% resource.errors.full_messages.each do |message| %>
+                <% if message.include? "Current password" %>
+                  <li><%= t('devise.failure.current_password_invalid') %></li>
+                <% elsif message.include? "Password confirmation" %>
+                  <li><%= t('devise.failure.update_password_confirmation') %></li>
+                <% else %>
+                  <li><%= message %></li>
+                <% end %>
+              <% end %>
+            </ul>
+            <button type="button" class="close" data-dismiss="alert">&times;</button> 
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="media align-items-center mb-7">
+            <div class="u-lg-avatar mr-3 image-align">
+              <% if current_user.avatar.attached? %>
+                <img class="img-fluid rounded-circle" src="<%=(url_for(current_user.avatar))%>" alt="Image Description" id="thumbnil">
+              <% else %>
+                <img class="img-fluid rounded-circle" src="https://ui-avatars.com/api/?background=ffffff&name=<%= current_user.first_name %> + <%= current_user.last_name %>" alt="Image Description" id="thumbnil">
+              <% end %>
+            </div>
+            
+            <div class="media-body">
+              <label class="btn btn-sm btn-primary transition-3d-hover file-attachment-btn mb-1 mb-sm-0 mr-1" for="fileAttachmentBtn">
+                Modifier votre photo
+                <%= f.file_field :avatar, :class => "file-attachment-btn__label", :onchange => "showMyImage(this)" %> 
+              </label>
+              <!-- <button id="removeMyImage" class="btn btn-sm btn-soft-secondary transition-3d-hover mb-1 mb-sm-0">Supprimer</button> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="mb-4">
+            <h5 class="font-weight-normal mb-0">Changer de mot de passe</h5>
+          </div>
+          <div class="form-group">
+            <%= f.label :current_password, "Mot de passe actuel", :class => "form-label-custom" %>
+            <%= f.password_field :current_password, :class => "form-control"%>
+          </div>
+
+          <div class="js-form-message <%= resource.errors.any? ? 'form-group u-has-error' : 'form-group' %>">
+            <%= f.label :password, "Nouveau mot de passe", :class => "form-label-custom" %>
+            <%= f.password_field :password, :class => "form-control", data: { 'error-class': "u-has-error", 'success-class': "u-has-success" }%>
+          </div>
+
+          <div class="js-form-message <%= resource.errors.any? ? 'form-group u-has-error' : 'form-group' %>">
+            <%= f.label :password_confirmation, "Nouveau mot de passe (une deuxieme fois)", :class => "form-label-custom" %>
+            <%= f.password_field :password_confirmation, :class => "form-control", data: { 'error-class': "u-has-error", 'success-class': "u-has-success" }%>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="mb-4">
+            <h5 class="font-weight-normal mb-0">Notifications</h5>
+          </div>
+
+          <div class="js-form-message <%= resource.errors.any? ? 'form-group u-has-error' : 'form-group' %>">
+            <%= f.label :email, :class => "form-label-custom" do %>
+              Courriel pour les notifications <span class="text-danger">*</span>
+            <% end %>
+            <%= f.email_field :email, :class => "form-control", data: { msg: "Veuillez fournir une adresse électronique valide.", 'error-class': "u-has-error", 'success-class': "u-has-success" }, required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label "Recevoir des alertes avant les examens", :class => "form-label-custom" %>
+            <ul class="list-inline align-items-center">
+              <li class="list-inline-item small-list-inline-item">
+                <div class="custom-control custom-checkbox d-flex align-items-center text-muted">
+                  <%= f.check_box :notify_week_before, :class => "custom-control-input" %>
+                  <%= f.label :notify_week_before, :class => "custom-control-label" do %>
+                    <small>Une semaine avant</small>
+                  <% end %>
+                </div>
+              </li>
+
+              <li class="list-inline-item small-list-inline-item">
+                <div class="custom-control custom-checkbox d-flex align-items-center text-muted">
+                  <%= f.check_box :notify_day_before, :class => "custom-control-input" %>
+                  <%= f.label :notify_day_before, :class => "custom-control-label" do %>
+                    <small>Une journée avant</small>
+                  <% end %>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="text-right">
+        <%= f.submit "Enregistrer", :class => 'btn btn-primary transition-3d-hover' %>
+      </div>
+    <% end %>
+  </div>
+
+<script>
+
+  var update_password_msg = "<%= t('devise.failure.update_password')%>"
+  var password_conrfirm_msg = "<%= t('devise.failure.update_password_confirmation') %>"
+  
+  $("#user_password").attr('data-msg',update_password_msg);
+  $("#user_password_confirmation").attr('data-msg',password_conrfirm_msg);
+</script>

@@ -1,0 +1,78 @@
+<%= content_for(:title, "Mot de passe oublié - Horacio Web") %>
+
+<div class="d-flex align-items-center position-relative height-lg-100vh">
+  <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0">
+    <div class="w-100 p-5">
+      <!-- Testimonials Carousel Main -->
+      <div id="testimonialsNavPagination" class="js-slick-carousel mx-auto">
+        <div class="js-slide">
+          <div class="w-md-80 w-lg-65 text-center mx-auto">
+            <%= image_tag("horacio_web_white.png", :alt => "horacio_web") %>
+          </div>
+        </div>
+      </div>
+      <!-- End Testimonials Carousel Pagination -->
+
+      <!-- Clients -->
+      <div class="position-absolute right-0 bottom-0 left-0 text-center p-5">
+        <h4 class="h6 text-white-70 mb-3">Développé par</h4>
+        <div class="d-flex justify-content-center">
+          <div class="mx-12">
+            <%= image_tag("picard_white.png", :alt => "picard") %>
+          </div>
+        </div>
+      </div>
+      <!-- End Clients -->
+    </div>
+  </div>
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col-md-8 col-lg-7 col-xl-6 offset-md-2 offset-lg-2 offset-xl-3 space-3 space-lg-0 logo-space">
+        <%= form_for(resource, as: resource_name, :html => {:class => 'js-validate mt-5', method: :post}, url: password_path(resource_name)) do |f| %>
+          <% if flash[:password_reset_fail] %>
+            <div class="alert-message">
+              <div class="alert alert-warning alert-dismissible fade show">
+                <span><%= flash[:password_reset_fail] %></span>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+              </div>
+            </div>
+          <% elsif flash[:password_reset_alert]%>
+            <div class="alert alert-success alert-dismissible fade show">
+              <%= flash[:password_reset_alert] %>
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+          <% end %>
+          <div class="mb-7">
+            <h2 class="h3 text-primary font-weight-normal mb-0">Mot de passe oublié</h2>
+            <!-- <p>Enter your email address below and we'll get you back on track.</p> -->
+          </div>
+
+          <div class="js-form-message <%= alert ? 'form-group u-has-error' : 'form-group' %>">
+            <%= f.label :username, "Code Permanent", :class => "form-label" %>
+            <%= f.text_field :username, :class => "form-control", data: { 'error-class': "u-has-error", 'success-class': "u-has-success" }, required: true %>
+          </div>
+
+          <!-- Button -->
+          <div class="row align-items-center mb-5">
+            <div class="col-4 col-sm-6">
+              <a class="small link-muted" href="/">Retour à la page de connexion</a>
+            </div>
+
+            <div class="col-8 col-sm-6 text-right">
+              <%= f.submit "Réinitialiser mon mot de passe", :class => 'btn btn-primary transition-3d-hover btn-white-space' %>
+            </div>
+          </div>
+          <!-- End Button -->
+        <% end %>
+      </div>
+    </div>
+  </div>
+    
+    <!--<#%= render "users/shared/links" %>-->
+  </div>
+</div>
+
+<script>
+  var username_msg = "<%= t('devise.failure.username_invalid')%>"
+  $("#user_username").attr('data-msg', username_msg);
+</script>

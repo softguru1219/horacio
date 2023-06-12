@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+@media (min-width: 992px){
+  .login-d-none {
+    display: none !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .img-resolution {
+    width: 80% !important;
+  } 
+
+  .logo-center {
+    margin: auto;
+  }
+
+  .logo-space {
+    margin-top: 1rem;
+  }
+}
+
+.calculation-form {
+  padding: 30px;
+  background-color: #f2f3f3;
+}
+
+.alert-message {
+  width: 100%;
+  margin: auto;
+}
+
+.forgot-password {
+  text-align: center;
+  color: #007bff;
+}
+
+.login-title {
+  text-align: center;
+  color: #31353c;
+}
+
+.small-list-inline-item {
+  margin-right: 1rem !important;
+}
+
+.field_with_errors { 
+  display: inline;
+}
+
+.form-label-custom {
+  display: block;
+  font-size: 90%;
+  font-weight: 500;
+}
+
+.u-header {
+  &__navbar-body,
+  &__navbar-nav {
+    margin-left: auto;
+  }
+}
+
+.active-day {
+  font-weight: bold;
+  color: #495057;
+}
+
+.inactive_day {
+  opacity: 0.5
+}
+
+.u-datatable__striped .odd {
+  background-color: #f8fafd;
+}
+
+.chart-title {
+  text-align: center;
+}
+
+#first_chartdiv {
+  width: 100%;
+  height: 500px;
+}
+
+.table-width {
+  width: 100%;
+}
+
+.wn-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-header {
+  background-color: #fff;
+}
+
+.entries-position {
+  float: right;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.email-footer {
+  margin-top: 8rem;
+}
+
+.incursor {
+  cursor: default !important;
+}
+
+.simulate-email-btn {
+  cursor: pointer !important;
+  margin-left: 5px;
+}
+
+.gradient-half-primary-v1 {
+  background-image: linear-gradient(150deg, #377dff 0%, #377dff 100%);
+  background-repeat: repeat-x;
+}
+
+.link-muted-non-decoration {
+  border-bottom: unset
+}
+
+.non-text-uppercase {
+  text-transform: none
+}
+
+.btn-white-space {
+  white-space: normal
+}
+
+.class-name {
+  font-weight: bold;
+  color: #495057;
+}
+
+.hide-date {
+  display: none;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.image-align {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-center {
+  margin: auto;
+}
+
+#previous {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+#forward {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+}

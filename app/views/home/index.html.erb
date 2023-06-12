@@ -1,0 +1,461 @@
+<%= content_for(:title, "Tableau de Bord - Horacio Web") %>
+<div class="bg-primary">
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-lg-7 order-lg-1">
+        <!-- User Info -->
+        <div class="media d-block d-sm-flex align-items-sm-center">
+          <div class="u-lg-avatar position-relative mb-sm-0 mr-3 image-align">
+            <% if current_user.avatar.attached? %>
+              <img class="img-fluid rounded-circle" src="<%=(url_for(current_user.avatar))%>" alt="Image Description">
+            <% else %>
+              <img class="img-fluid rounded-circle" src="https://ui-avatars.com/api/?background=ffffff&name=<%= current_user.first_name %> + <%= current_user.last_name %>" alt="Image Description">
+            <% end %>
+          </div>
+          <div class="media-body">
+            <h1 class="h3 text-white font-weight-medium mb-0">Bonjour, <%= current_user.first_name %>!</h1>
+          </div>
+        </div>
+        <!-- End User Info -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-light">
+  <div class="container space-2" id="schedule">
+    <div class="w-md-100 w-lg-100 mx-md-auto">
+      <% if flash[:success] %>
+        <div class="alert alert-success alert-dismissible fade show"><%= flash[:success] %>
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+      <% end %>
+
+      <div class="mb-4"></div>
+      
+      <% if Rails.env.development? || Rails.env.staging? %>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="mb-4 table-width">
+              <div id="datepickerWrapperFrom" class="u-datepicker input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <span class="fas fa-calendar"></span>
+                  </span>
+                </div>
+                <input class="js-range-datepicker form-control bg-transparent rounded-right" type="text" placeholder="Date" aria-label="Date"
+                       data-rp-wrapper="#datepickerWrapperFrom"
+                       data-rp-date-format="d/m/Y"
+                       data-rp-default-date='["<%= @convert_date %>"]' >
+                <button id="date-simulate" class="btn btn-primary simulate-email-btn">Simuler une date</button>
+                <button id="email-simulate" class="btn btn-primary simulate-email-btn">Simuler courriel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="row pagination-center">
+        <a class="page-link" href="#" aria-label="Previous" id="previous">
+          <span aria-hidden="true">«</span>
+          <span class="sr-only">Previous</span>   
+        </a>
+        <div>
+          <h2 class="mb-0">Semaine du <%= beginning_week_date(@current_date)[0] %></h2>
+          <h2 class="h6 mb-0 hide-date" id="hide-seleted-date"><%= beginning_week_date(@current_date)[1] %></h2>
+          <h2 class="h6 mb-0 hide-date" id="hide-current-date"><%= beginning_week_date(@current_date)[2] %></h2>
+        </div>
+        <a class="page-link" href="#" aria-label="Next" id="forward">
+          <span aria-hidden="true">»</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+    
+    <div class="card-deck d-block d-lg-flex card-lg-gutters-3 mb-6">
+      <div class="card mb-3 mb-lg-0">
+        <div class="card-body p-5">
+          <div class="media align-items-center">
+            <span class="btn btn-lg btn-icon btn-soft-primary rounded-circle mr-4">
+              <span class="fas fa-pencil-alt btn-icon__inner"></span>
+            </span>
+            <div class="media-body">
+              <span class="d-block font-size-3">Prochain cours</span>
+              <h3 class="h6 text-secondary font-weight-normal mb-0" id="cours-date"></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3 mb-lg-0">
+        <div class="card-body p-5">
+          <div class="media align-items-center">
+            <span class="btn btn-lg btn-icon btn-soft-success rounded-circle mr-4">
+              <span class="fas fa-book btn-icon__inner"></span>
+            </span>
+            <div class="media-body">
+              <span class="d-block font-size-3">Prochain examen</span>
+              <h3 class="h6 text-secondary font-weight-normal mb-0" id="examen-date"></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-4">
+        <div class="row justify-content-between align-items-center mb-4">
+          <div class="col-md-7 order-md-1">
+            <ul class="nav nav-classic nav-borderless px-0" id="pills-tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-one-tab" data-toggle="pill" href="#pills-one" role="tab" aria-controls="pills-one" aria-selected="true">Cours de la semaine</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-two-tab" data-toggle="pill" href="#pills-two" role="tab" aria-controls="pills-two" aria-selected="false">Prochains examens</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-three-tab" data-toggle="pill" href="#pills-three" role="tab" aria-controls="pills-three" aria-selected="false">Progression</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="tab-content" id="pills-tabContent">
+          <!-- Content One -->
+          <div class="tab-pane fade show active" id="pills-one" role="tabpanel" aria-labelledby="pills-on-tab">
+            <!-- Transaction Table -->
+            <div class="table-responsive-md u-datatable">
+              <table class="table table-borderless u-datatable__striped u-datatable__content u-datatable__trigger mb-5 incursor">
+                <thead>
+                  <tr class="text-uppercase font-size-1">
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">Jour</div>
+                    </th>
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">AM</div>
+                    </th>
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">PM</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="font-size-1 days_of_week">
+                  <tr role="row" class="odd inactive_day">
+                    <td class="align-middle"><%= natural_date(params[:selected_date], 0) %></td>
+                    <% if @schedule && @schedule.lundi_am_module.present? %>
+                      <td class="align-middle">
+                        <p class="class-name"><%= @schedule.lundi_am_module %></p>
+                        <p>Local <%= @schedule.lundi_am %></p>
+                      </td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                    <% if @schedule && @schedule.lundi_pm_module.present? %>
+                      <td class="align-middle">
+                        <p class="class-name"><%= @schedule.lundi_pm_module %></p>
+                        <p>Local <%= @schedule.lundi_pm %></p>
+                      </td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                  </tr>
+                  <tr role="row" class="event inactive_day">
+                    <td class="align-middle"><%= natural_date(params[:selected_date], 1) %></td>
+                    <% if @schedule && @schedule.mardi_am_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.mardi_am_module %></p><p>Local <%= @schedule.mardi_am %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                    <% if @schedule && @schedule.mardi_pm_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.mardi_pm_module %></p><p>Local <%= @schedule.mardi_pm %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                  </tr>
+                  <tr role="row" class="odd inactive_day">
+                    <td class="align-middle"><%= natural_date(params[:selected_date], 2) %></td>
+                    <% if @schedule && @schedule.mercredi_am_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.mercredi_am_module %></p><p>Local <%= @schedule.mercredi_am %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                    <% if @schedule && @schedule.mercredi_pm_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.mercredi_pm_module %></p><p>Local <%= @schedule.mercredi_pm %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                  </tr>
+                  <tr role="row" class="event inactive_day">
+                    <td class="align-middle"><%= natural_date(params[:selected_date], 3) %></td>
+                    <% if @schedule && @schedule.jeudi_am_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.jeudi_am_module %></p><p>Local <%= @schedule.jeudi_am %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                    <% if @schedule && @schedule.jeudi_pm_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.jeudi_pm_module %></p><p>Local <%= @schedule.jeudi_pm %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                  </tr>
+                  <tr role="row" class="odd inactive_day">
+                    <td class="align-middle"><%= natural_date(params[:selected_date], 4) %></td>
+                    <% if @schedule && @schedule.vendredi_am_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.vendredi_am_module %></p><p>Local <%= @schedule.vendredi_am %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                    <% if @schedule && @schedule.vendredi_pm_module.present? %>
+                      <td class="align-middle"><p class="class-name"><%= @schedule.vendredi_pm_module %></p><p>Local <%= @schedule.vendredi_pm %></p></td>
+                    <% else %>
+                      <td class="align-middle">-</td>
+                    <% end %>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- End Transaction Table -->
+          </div>
+          <!-- End Content One -->
+
+          <!-- Content Two -->
+          <div class="tab-pane fade" id="pills-two" role="tabpanel" aria-labelledby="pills-two-tab">
+            <table class="table table-borderless u-datatable__striped u-datatable__content u-datatable__trigger mb-5 incursor">
+                <thead>
+                  <tr class="font-size-1">
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">DATE</div>
+                    </th>
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">AM ou PM</div>
+                    </th>
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">LOCAL</div>
+                    </th>
+                    <th scope="col" class="font-weight-medium">
+                      <div class="d-flex justify-content-between align-items-center">EXAMEN</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="font-size-1" id="next-exams">
+                  <% if @next_exams.present? %>
+                    <% @next_exams.each do |n| %>
+                      <tr role="row">
+                        <% if n.present? && n["natural_date"] %>
+                          <td class="align-middle sorting_1"><%= n["natural_date"] %></td>
+                        <% else %>
+                          <td class="align-middle sorting_1">-</td>
+                        <% end %>
+                        <% if n.present? && n["choix"] %>
+                          <td class="align-middle sorting_1"><%= n["choix"] %></td>
+                        <% else %>
+                          <td class="align-middle sorting_1">-</td>
+                        <% end %>
+                        <% if n.present? && n["local"] %>
+                          <td class="align-middle sorting_1"><%= n["local"] %></td>
+                        <% else %>
+                          <td class="align-middle sorting_1">-</td>
+                        <% end %>
+                        <% if n.present? && n["examen"] %>
+                          <td class="align-middle sorting_1"><%= n["examen"] %></td>
+                        <% else %>
+                          <td class="align-middle sorting_1">-</td>
+                        <% end %>
+                      </tr>  
+                    <% end %>
+                  <% else %>
+                    <tr role="row">
+                      <td class="align-middle sorting_1">-</td>
+                      <td class="align-middle sorting_1">-</td>
+                      <td class="align-middle sorting_1">-</td>
+                      <td class="align-middle sorting_1">-</td>
+                    </tr>  
+                  <% end %>
+                </tbody>
+              </table>
+          </div>
+          <!-- End Content Two -->
+
+          <!-- Content Three -->
+          <div class="tab-pane fade" id="pills-three" role="tabpanel" aria-labelledby="pills-three-tab">
+            <% if @completed_exams.present? %>
+              <table class="table table-borderless u-datatable__striped u-datatable__content u-datatable__trigger mb-5 incursor">
+                <thead>
+                  <tr class="font-size-1" role="row">
+                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Task : activate to sort column descending" style="width: 274px;">
+                      <div class="d-flex justify-content-between align-items-center">Module
+                      </div>
+                    </th>
+                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Task : activate to sort column descending" style="width: 274px;">
+                      <div class="d-flex justify-content-between align-items-center">Heures complétés
+                      </div>
+                    </th>
+                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Task : activate to sort column descending" style="width: 274px;">
+                      <div class="d-flex justify-content-between align-items-center">Heures allouées
+                      </div>
+                    </th>
+                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Task : activate to sort column descending" style="width: 274px;">
+                      <div class="d-flex justify-content-between align-items-center">Heures d'absences
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="font-size-1" id="completed-exams">
+                  <% @completed_exams.each do |c| %>
+                    <tr role="row">
+                      <td class="align-middle sorting_1"><%= c["module"] %></td>
+                      <% if c.present? && c["complete"] %>
+                        <td class="align-middle"><%= c["complete"] %></td>
+                      <% else %>
+                        <td class="align-middle">-</td>
+                      <% end %>
+                      <% if c.present? && c["allowees"] %>
+                        <td class="align-middle"><%= c["allowees"] %></td>
+                      <% else %>
+                        <td class="align-middle">-</td>
+                      <% end %>
+                      <% if c.present? && c["absences"] %>
+                        <td class="align-middle"><%= c["absences"] %></td>
+                      <% else %>
+                        <td class="align-middle">-</td>
+                      <% end %>
+                    </tr>  
+                  <% end %>
+                </tbody>
+              </table>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="mb-4 table-width">
+                    <h5 class="font-weight-normal mb-3 chart-title">Temps restant</h5>
+                    <div id="tempa_chartdiv"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="mb-4 table-width">
+                    <h5 class="font-weight-normal mb-3 chart-title">Complétés - Absences</h5>
+                    <div id="absence_chartdiv"></div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <!-- End Content Three -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  
+  am4core.ready(function() {
+
+    // Themes begin
+    am4core.useTheme(am4themes_animated);
+    // Themes end
+
+    tempa_keys = "<%= @tempa_keys %>"
+    tempa_vals = "<%= @tempa_vals %>"
+    tempa_chart(tempa_keys, tempa_vals);
+
+    abs_com_keys = "<%= @abs_com_keys %>"
+    abs_com_vals = "<%= @abs_com_vals %>"
+    absence_chart(abs_com_keys, abs_com_vals);
+
+  });
+
+  // Tempa chart
+  function tempa_chart(tempa_keys, tempa_vals){
+    tempa_keys = JSON.parse(tempa_keys.replace(/&quot;/g, '"'))
+    tempa_vals = JSON.parse(tempa_vals)
+    tempa = []
+
+    for(i=0; i<tempa_keys.length; i++){
+      tempa.push({"module": tempa_keys[i], "value": tempa_vals[i]})
+    }
+
+    // Create chart instance
+    var tempa_chart = am4core.create("tempa_chartdiv", am4charts.PieChart);
+
+    // Add data
+    tempa_chart.data = tempa
+
+    // Add Legend
+    tempa_chart.legend = new am4charts.Legend();
+    tempa_chart.data = tempa
+    tempa_chart.legend.fontSize = 15;
+
+    var tempa_chart_markerTemplate = tempa_chart.legend.markers.template;
+    tempa_chart_markerTemplate.width = 15;
+    tempa_chart_markerTemplate.height = 15;
+
+    // Add and configure Series
+    var tempa_pieSeries = tempa_chart.series.push(new am4charts.PieSeries());
+    change_pieSeries(tempa_pieSeries)
+  }
+
+  // Absence chart
+  function absence_chart(absence_keys, absence_vals){
+    absence_keys = JSON.parse(absence_keys.replace(/&quot;/g, '"'))
+    absence_vals = JSON.parse(absence_vals)
+    absences = []
+
+    for(i=0; i<absence_keys.length; i++){
+      absences.push({"module": absence_keys[i], "value": absence_vals[i]})
+    }
+
+    // Create chart instance
+    var absence_chart = am4core.create("absence_chartdiv", am4charts.PieChart);
+
+    // Add data
+    absence_chart.data = absences
+
+    // Add Legend
+    absence_chart.legend = new am4charts.Legend();
+    absence_chart.data = absences
+
+    absence_chart.legend.fontSize = 15;
+
+    var absence_chart_markerTemplate = absence_chart.legend.markers.template;
+    absence_chart_markerTemplate.width = 15;
+    absence_chart_markerTemplate.height = 15;
+
+    // Add and configure Series
+    var absence_pieSeries = absence_chart.series.push(new am4charts.PieSeries());
+    change_pieSeries(absence_pieSeries)
+  }
+
+  function change_pieSeries(pieSeries){
+    pieSeries.dataFields.category = "module";
+    pieSeries.dataFields.value = "value";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
+    pieSeries.labels.template.disabled = true;
+    pieSeries.labels.template.padding(0,0,0,0);
+    pieSeries.alignLabels = false;
+    pieSeries.labels.template.bent = true;
+    pieSeries.labels.template.radius = 3;
+
+    // Create a base filter effect (as if it's not there) for the hover to return to
+    var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+    shadow.opacity = 0;
+
+    // Create hover state
+    var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+    // Slightly shift the shadow and make it more prominent on hover
+    var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+    hoverShadow.opacity = 0.7;
+    hoverShadow.blur = 5;
+  }
+
+</script>

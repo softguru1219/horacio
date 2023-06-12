@@ -1,0 +1,157 @@
+<%= content_for(:title, "Accueil - Horacio Web") %>
+
+<div class="d-flex align-items-center position-relative height-lg-100vh">
+  <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0">
+    <div class="w-100 p-5">
+      <!-- Testimonials Carousel Main -->
+      <div id="testimonialsNavPagination" class="js-slick-carousel mx-auto">
+        <div class="js-slide">
+          <div class="w-md-80 w-lg-65 text-center mx-auto">
+            <%= image_tag("horacio_web_white.png", :alt => "horacio_web") %>
+          </div>
+        </div>
+      </div>
+      <!-- End Testimonials Carousel Pagination -->
+
+      <!-- Clients -->
+      <div class="position-absolute right-0 bottom-0 left-0 text-center p-5">
+        <h4 class="h6 text-white-70 mb-3">Développé par</h4>
+        <div class="d-flex justify-content-center">
+          <div class="mx-12">
+            <%= link_to 'https://picard.ca/', target: "_blank" do %>
+              <%= image_tag("picard_white.png", :alt => "picard") %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <!-- End Clients -->
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col-md-8 col-lg-7 col-xl-6 offset-md-2 offset-lg-2 offset-xl-3 space-3 space-lg-0 logo-space">
+        <!-- Form -->
+        <%= form_for(resource, as: resource_name, :html => {:class => 'js-validate mt-5'}, url: session_path(resource_name)) do |f| %>
+          <% if params.has_key?("confirm") %>
+            <div class="alert alert-success alert-dismissible fade show"><%= t('devise.passwords.created') %>
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+          <% elsif flash[:timedout] %>
+            <div class="alert-message">
+              <div class="alert alert-warning alert-dismissible fade show">
+                <strong>Attention!</strong>
+                <span><%= t('devise.failure.timeout') %></span>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+              </div>
+            </div>
+          <% elsif alert %>
+            <div class="alert-message">
+              <div class="alert alert-warning alert-dismissible fade show">
+                <strong>Attention!</strong>
+                <span><%= alert %></span>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+              </div>
+            </div>
+          <% end %>
+          <!-- Title -->
+          <div class="mb-7">
+            <h2 class="h3 text-primary font-weight-normal mb-0">Horacio Web</h2>
+            <p>Connectez-vous pour consulter votre profil</p>
+          </div>
+          <!-- End Title -->
+
+          <!-- Form Group -->
+          <div class="js-form-message <%= alert ? 'form-group u-has-error' : 'form-group' %>">
+            <%= f.label :username, "Code Permanent", :class => "form-label" %>
+            <%= f.text_field :username, :class => "form-control", data: { 'error-class': "u-has-error", 'success-class': "u-has-success" }, required: true %>
+          </div>
+          <!-- End Form Group -->
+
+          <!-- Form Group -->
+          <div class="js-form-message <%= alert ? 'form-group u-has-error' : 'form-group' %>">
+            <%= f.label :password, :class => "form-label" do %>
+              <span class="d-flex justify-content-between align-items-center">
+                MOT DE PASSE
+                <!-- <a class="link-muted text-capitalize font-weight-normal" href="recover-account.html">Forgot Password?</a> -->
+                <%= link_to "Mot de passe oublié?", new_password_path(resource_name), class: "link-muted non-text-uppercase font-weight-normal" %>
+              </span>
+            <% end %>
+            <%= f.password_field :password, :class => "form-control", data: { 'error-class': "u-has-error", 'success-class': "u-has-success" }, required: true %>
+          </div>
+          <!-- End Form Group -->
+
+          <!-- Button -->
+          <div class="row align-items-center mb-5">
+            <div class="col-6">
+              <!-- <span class="small text-muted">Marche à suivre pour la première connexion</span> -->
+              <a class="link-muted small link-muted-non-decoration" href="#marcheModal" data-modal-target="#marcheModal">Marche à suivre pour la première connexion</a>
+            </div>
+
+            <div class="col-6 text-right">
+              <%= f.submit "Se connecter", :class => 'btn btn-primary transition-3d-hover' %>
+            </div>
+          </div>
+          <!-- End Button -->
+        <% end %>
+        <!-- End Form -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="marcheModal" class="js-modal-window u-modal-window u-modal-window--payment rounded">
+    <div class="card border-0">
+      <!-- Header -->
+      <header class="card-header bg-light py-3 px-5">
+        <div class="row justify-content-between align-items-center no-gutters">
+          <div class="col-6">
+            <h4 class="h6 mb-0">Marche à suivre pour la première connexion</h4>
+          </div>
+
+          <div class="col-6 text-right">
+            <button type="button" class="close" aria-label="Close" onclick="Custombox.modal.close();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <!-- End Header -->
+
+      <form class="js-validate">
+        <div class="card-body p-5">
+          <!-- Input Group -->
+          <!-- <label class="h6 small d-block text-uppercase mb-2">
+            Phone number
+          </label>
+          <div class="js-form-message js-focus-state">
+            <div class="input-group">
+              <div class="input-group-prepend" id="phoneNumber">
+                <span class="input-group-text">+01</span>
+              </div>
+              <input type="text" class="form-control" name="name" placeholder="Phone number" aria-label="Phone number" aria-describedby="phoneNumber" required
+                     data-msg="Please enter a valid phone number."
+                     data-error-class="u-has-error"
+                     data-success-class="u-has-success">
+            </div>
+          </div> -->
+          <!-- End Input Group -->
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer py-3 px-5">
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-sm btn-primary transition-3d-hover mr-1">J'ai compris</button>
+          </div>
+        </div>
+        <!-- End Card Footer -->
+      </form>
+    </div>
+  </div>
+
+<script>
+  var username_msg = "<%= t('devise.failure.username_invalid')%>"
+  var user_password_msg = "<%= t('devise.failure.user_password_invalid') %>"
+  $("#user_username").attr('data-msg', username_msg);
+  $("#user_password").attr('data-msg', user_password_msg);
+</script>

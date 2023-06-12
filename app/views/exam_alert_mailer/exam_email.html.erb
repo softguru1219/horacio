@@ -1,0 +1,28 @@
+<div class="form-align">
+  <%= image_tag(attachments['logo.png'].url) %>
+
+  <div class="form-group">
+    <h2 class='h3'><%= @title %></h2>
+    <h3>Votre examen <span class="font-weight"><%= @exam_name %></span> au <span class="font-weight">Local <%= @local %></span> <%= @period_title %> <%= @period %>.</h3>
+    <div class="button-group">
+      <% if Rails.env.development? %>
+        <%= link_to '<button type="button" class="btn btn-primary transition-3d-hover">Consulter Horacio</button>'.html_safe, schedule_url %>
+      <% elsif Rails.env.staging? %>
+        <%= link_to '<button type="button" class="btn btn-primary transition-3d-hover">Consulter Horacio</button>'.html_safe, "http://horacio-staging.jeedee.com/schedule" %>
+      <% else %>
+        <%= link_to '<button type="button" class="btn btn-primary transition-3d-hover">Consulter Horacio</button>'.html_safe, "http://horacio-production.jeedee.com/schedule" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="footer-group">
+    <span>Ce courriel vous a été envoyé par Horacio en suivant vos préférences d’envoi. </span>
+    <% if Rails.env.development? %>
+      <%= link_to 'Modifiez les si nécéssaire.', edit_profile_url %>
+    <% elsif Rails.env.staging? %>
+      <%= link_to 'Modifiez les si nécéssaire.', "http://horacio-staging.jeedee.com/profile/edit" %>
+    <% else %>
+      <%= link_to 'Modifiez les si nécéssaire.', "http://horacio-production.jeedee.com/profile/edit" %>
+    <% end %>
+  </div>
+</div>
